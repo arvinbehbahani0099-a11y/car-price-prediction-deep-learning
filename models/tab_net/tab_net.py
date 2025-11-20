@@ -7,11 +7,11 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 
 print(torch.cuda.is_available())
-print(torch.cuda.get_device_name())
+# print(torch.cuda.get_device_name())
 
 
 df = pd.read_csv(
-    "data/csv_outputs/cleaned_mileage_model_price_name_color_data.csv.csv")
+    "data/csv_outputs/cleaned_mileage_model_price_name_color_data.csv")
 
 df = df.sample(frac=1, random_state=42).reset_index(drop=True)
 
@@ -57,7 +57,7 @@ model = TabNetRegressor(**tabnet_params)
 model.fit(
     X_train, y_train,
     eval_set=[(X_val, y_val)],
-    max_epochs=1,
+    max_epochs=100,
     batch_size=128,
     virtual_batch_size=64,
     patience=15,
