@@ -2,6 +2,11 @@ import numpy as np
 import pandas as pd
 from pytorch_tabnet.tab_model import TabNetRegressor
 from sklearn.model_selection import train_test_split
+import torch
+
+
+print(torch.cuda.is_available())
+print(torch.cuda.get_device_name())
 
 
 df = pd.read_csv(
@@ -15,19 +20,16 @@ selected_cols = cat_cols + num_cols
 X = df[selected_cols].values.astype(np.float32)
 y = df["price"].values.astype(np.float32).reshape(-1, 1)
 
-
 cat_idxs = [selected_cols.index(col) for col in cat_cols]
 cat_dims = [df[col].nunique() for col in cat_cols]
 
 
-
-
 X_temp, X_test, y_temp, y_test = train_test_split(
-    X, y, test_size=0.15, random_state=42)
+    X, y, test_size=0.1, random_state=42)
 
 
 X_train, X_val, y_train, y_val = train_test_split(
-    X_temp, y_temp, test_size=0.2, random_state=42)
+    X_temp, y_temp, test_size=0.15, random_state=42)
 
 # print(cat_cols, cat_dims)
 print(f"train size: {X_train.shape[0]}")
@@ -37,8 +39,8 @@ print(f"test size: {X_test.shape[0]}")
 
 tabnet_params = {
     "n_d": 8,
-    "n_a": 8,
-    "n_steps": 10,
+    "n_a": 24,
+    "n_steps": 8,
     "gamma": 1.5,
     "cat_idxs": cat_idxs,
     "cat_dims": cat_dims,
@@ -52,10 +54,10 @@ model = TabNetRegressor(**tabnet_params)
 model.fit(
     X_train, y_train,
     eval_set=[(X_val, y_val)],
-    max_epochs=15,
+    max_epochs=30,
     batch_size=256,
     virtual_batch_size=128,
-    patience=20,
+    patience=15,
     drop_last=False
 )
 
@@ -63,4 +65,5 @@ preds = model.predict(X_test)
 
 
 for real, pred in zip(y_test[:10], preds[:10]):
-    print(f"Actual: {real[0]}, Predicted: {pred}")
+    print("Actual:    {:.1f}\nPredicted: {:.1f}\n".format(
+        float(real[0])*35000000000, abs(float(pred)*35000000000)))
