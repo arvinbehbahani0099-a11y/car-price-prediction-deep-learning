@@ -12,6 +12,8 @@ print(torch.cuda.get_device_name())
 df = pd.read_csv(
     "data/csv_outputs/cleaned_mileage_model_price_name_color_data.csv.csv")
 
+df = df.sample(frac=1, random_state=42).reset_index(drop=True)
+
 
 num_cols = ["mileage", "model"]
 cat_cols = ["color_id", "name_cluster"]
@@ -38,7 +40,7 @@ print(f"test size: {X_test.shape[0]}")
 
 
 tabnet_params = {
-    "n_d": 12,
+    "n_d": 24,
     "n_a": 12,
     "n_steps": 8,
     "gamma": 1.5,
@@ -55,8 +57,8 @@ model.fit(
     X_train, y_train,
     eval_set=[(X_val, y_val)],
     max_epochs=100,
-    batch_size=256,
-    virtual_batch_size=128,
+    batch_size=128,
+    virtual_batch_size=64,
     patience=15,
     drop_last=False
 )
