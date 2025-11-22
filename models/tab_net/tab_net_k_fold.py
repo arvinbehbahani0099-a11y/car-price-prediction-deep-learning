@@ -1,6 +1,9 @@
 import numpy as np
 import pandas as pd
+<<<<<<< HEAD
 import torch.nn as nn
+=======
+>>>>>>> dbf2b767c64db9bcfa92cb6439c677028afbc7b0
 import torch
 from pytorch_tabnet.tab_model import TabNetRegressor
 from sklearn.model_selection import train_test_split, KFold
@@ -37,7 +40,11 @@ cat_dims = [df[col].nunique() for col in cat_cols]
 
 
 X_train_full, X_test, y_train_full, y_test = train_test_split(
+<<<<<<< HEAD
     X, y, test_size=0.1, random_state=42)
+=======
+    X, y, test_size=0.15, random_state=42)
+>>>>>>> dbf2b767c64db9bcfa92cb6439c677028afbc7b0
 
 # print(cat_cols, cat_dims)
 # print(f"train size: {X_train.shape[0]}")
@@ -54,7 +61,11 @@ tabnet_params = {
     "cat_dims": cat_dims,
     "cat_emb_dim": [4, 12],
     "optimizer_fn": __import__("torch").optim.Adam,
+<<<<<<< HEAD
     "optimizer_params": {"lr": 2e-2},
+=======
+    "optimizer_params": {"lr": 2e-2}
+>>>>>>> dbf2b767c64db9bcfa92cb6439c677028afbc7b0
 }
 
 fold_mse = []
@@ -69,7 +80,10 @@ for fold, (train_idx, val_idx) in enumerate(kf.split(X_train_full)):
     model.fit(
         X_train, y_train,
         eval_set=[(X_val, y_val)],
+<<<<<<< HEAD
         loss_fn=nn.SmoothL1Loss(),
+=======
+>>>>>>> dbf2b767c64db9bcfa92cb6439c677028afbc7b0
         max_epochs=100,
         batch_size=128,
         virtual_batch_size=64,
@@ -95,11 +109,19 @@ print(f"final mae: {np.mean(fold_mae)}")
 
 test_prediction = model.predict(X_test)
 
+<<<<<<< HEAD
 mse_test = mean_squared_error(y_test, test_prediction)
 mae_test = mean_absolute_error(y_test, test_prediction)
 
 print("test MSE:", round(float(mse_test), 6))
 print("test MAE:", round(float(mae_test), 6), round(float(mae), 6)*35000000000)
+=======
+mse_test = mean_squared_error(y_test, preds)
+mae_test = mean_absolute_error(y_test, preds)
+
+print("MSE:", round(float(mse_test), 6))
+print("MAE:", round(float(mae_test), 6), round(float(mae), 6)*35000000000)
+>>>>>>> dbf2b767c64db9bcfa92cb6439c677028afbc7b0
 
 
 # for real, pred in zip(y_test[:10], preds[:10]):
