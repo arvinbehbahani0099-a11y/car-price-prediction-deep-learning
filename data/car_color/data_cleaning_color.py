@@ -18,4 +18,4 @@ df["color_id"] = color_encoder.fit_transform(df["color"])
 
 
 df.to_csv(
-    "data/csv_outputs/cleaned_mileage_model_price_name_color_data.csv.csv", index=False)
+    "data/csv_outputs/cleaned_mileage_model_price_name_color_data.csv", index=False)

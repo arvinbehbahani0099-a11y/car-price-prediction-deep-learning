@@ -4,7 +4,8 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("data/csv_outputs/cleaned_mileage_model_price_data.csv")
+df = pd.read_csv(
+    "data/csv_outputs/cleaned_mileage_model_price_name_color_data.csv")
 
 names = df['name'].astype(str).tolist()
 
@@ -13,18 +14,18 @@ X = vectorizer.fit_transform(names)
 
 
 sse = []
-K_range = range(2, 21)
+K_range = range(400, 401)
 
 for k in K_range:
     km = KMeans(n_clusters=k, random_state=42)
     km.fit(X)
     sse.append(km.inertia_)
 
-# plt.plot(K_range, sse, marker='o')
-# plt.xlabel("k")
-# plt.ylabel("SSE")
-# plt.title("Elbow Method")
-# plt.show()
+plt.plot(K_range, sse, marker='o')
+plt.xlabel("k")
+plt.ylabel("SSE")
+plt.title("Elbow Method")
+plt.show()
 
 
 sil_scores = []
