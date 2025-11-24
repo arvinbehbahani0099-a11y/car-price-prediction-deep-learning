@@ -21,7 +21,9 @@ docs_words = [
     'گازسوزکارخانه', 'قابل', 'وقابل', 'فروشی', 'صفرخشک', 'پایدار', 'پایداری', 'ثالث', 'شخص', 'بدنه', 'دارد', 'تمام', 'بدون‌رنگ', 'فنی',
     'پر', 'کلاغی', 'پرکلاغی', 'تک', 'لاکاغذی', 'سواری', 'مونتاژ', 'وارداتی', 'واردات', 'یخچال', 'کاپوت', 'فقط', 'شرایط', 'تا', 'درصدنقدمابقی',
     'ماه', 'پارسال', 'فوق', 'سلامت', 'اخر', 'آخر', 'اراک', 'ساده', 'سالم', 'دارم', 'روز', 'ارتقاء', 'سود', 'شما', 'برج', 'برای', 'بسیار',
-    'یی'
+    'یی', 'ایربگ', 'گازسوز', 'دور', 'روزه', 'یکپارچه', 'سامانه', 'همان', 'ثانیه', 'تکسوز', 'لازرورقی', 'بسیارسالم', 'میکنم', 'یا', 'ابشنال',
+    'خیلی', 'دیلایت', 'دار', 'خوش', 'روخ', 'رخ', 'شاسی', 'سرحال', 'مدیران', 'موتوری', 'لحظه', 'پلمب', 'استیشن', 'تصادف', 'معمولی', 'آفتاب'
+    'افتاب', 'سوختگی', 'دست', 'درجه', 'یک', 'اسپرت', 'لکه', 'یه', 'فرانسه', 'بارنخورده', 'واقعاسالمه', 'ماشین',
 ]
 colors = [
     'سفید', 'مشکی', 'طوسی', 'نقره‌ای', 'خاکستری', 'آبی', 'قرمز', 'زرشکی', 'سبز', 'بژ',
@@ -29,7 +31,8 @@ colors = [
     'white', 'black', 'gray', 'grey', 'blue', 'red', 'green', 'silver', 'gold', 'orange', 'brown'
 ]
 years = [y for y in range(1370, 1406)] + [y for y in range(1990, 2026)] + \
-    [y for y in range(50, 100)] + [y for y in range(400, 404)]
+    [y for y in range(50, 100)] + [y for y in range(400, 404)
+                                   ] + [y for y in range(300, 400)]
 
 models = [y for y in range(400)]
 
@@ -42,7 +45,7 @@ def filter_unuseful_words(name):
     for word in token.copy():
         try:
             int_word = int(word)
-            if int_word in years:
+            if int_word in years or int_word == 1:
                 token.remove(word)
 
             elif int_word in models:
@@ -73,12 +76,29 @@ def filter_unuseful_words(name):
     delete_nbsp_more = delete_nbsp.replace("&nbsp;&nbsp;", "")
     delete_plus = delete_nbsp_more.replace("+", "")
     delete_dot = delete_plus.replace(".", "")
-    rep_h = delete_dot.replace("اچ", "h")
-    delete_silver = rep_h.replace("نقره ای", "")
+    rep_jade = delete_dot.replace("یشمی", "")
+    delete_silver = rep_jade.replace("نقره ای", "")
     delete_es = delete_silver.replace("اص", "")
     delete_white = delete_es.replace("سفید", "")
     delete_car = delete_white.replace('خودرو', '')
-    final_filtered_name = delete_car.strip().lower()
+    delete_12 = delete_car.replace("12", "")
+    delete_same = delete_12.replace('همان', "")
+    delete_cng = delete_same.replace("سی ان جی", "")
+    delete_leather_seat = delete_cng.replace("صندلی چرم", "")
+    delete_10 = delete_leather_seat.replace("10", "")
+    delete_bar = delete_10.replace("بار", "")
+    delete_user = delete_bar.replace("مصرف کننده", "")
+    delete_yee = delete_user.replace("یی", "")
+    delete_polomb = delete_yee.replace("پلمب", "")
+    rep_2 = delete_polomb.replace("دو", "2")
+    rep_3 = rep_2.replace("سه", "3")
+    rep_4 = rep_3.replace("چهار", "4")
+    rep_4_alt = rep_4.replace("چار", "4")
+    rep_5 = rep_4_alt.replace("پنج", "5")
+    rep_6 = rep_5.replace("شش", "6")
+    rep_6_alt = rep_6.replace("شیش", "6")
+
+    final_filtered_name = rep_6_alt.strip().lower()
 
     return final_filtered_name
 
@@ -93,8 +113,9 @@ def filter_unuseful_words(name):
 # print(filter_unuseful_words('  پژو پارس سال عروسک'))
 # print(filter_unuseful_words('رانا پلاس تحویل کم'))
 # print(filter_unuseful_words(' پژو ۴۰۵ لاکاغذی'))
-# print(filter_unuseful_words(' پژو ۴۰۵ پرکلاغی'))
-# print(filter_unuseful_words(' سوزوکی گراند ویتارا مونتاژ'))
-# print(filter_unuseful_words('پژو 206 تیپ 2 فقط 1 کاپوت یخچال'))
-# print(filter_unuseful_words('اس دی v 8 ۳۰ درصدنقدمابقی شرایط تا 4 ماه'))
-# print(filter_unuseful_words('کوییک دنده‌ای rسفید'))
+# print(filter_unuseful_words('      رنو تندر e 2 پارس یی'))
+# print(filter_unuseful_words(' 207 صفرکیلومتر تحویل همان ثانیه'))
+# print(filter_unuseful_words('       پژو 206 تیپ 2 دور'))
+# print(filter_unuseful_words('         سمند سورن پلاس تحویلی 12  17'))
+# print(filter_unuseful_words(' سمند ای اف‌ سون 1 397'))
+# print(filter_unuseful_words('پراید 131 واقعاسالمه'))

@@ -25,10 +25,14 @@ with open("cluster.txt", "w", encoding="utf-8") as file:
         file.write("\n")
 
 
+print(df.shape)
+df = df.dropna(subset="name")
+print(df.shape)
+
 df.to_csv("data/csv_outputs/cleaned_mileage_model_price_name_data.csv",
           float_format="%.15f", index=False)
 
-print(df.shape)
+
 
 # name_cluster_dummies = pd.get_dummies(df["name_cluster"])
 # df = pd.concat([df, name_cluster_dummies], axis=1)
