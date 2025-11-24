@@ -13,7 +13,7 @@ df["name"] = df["name"].apply(filter_unuseful_words)
 vectorizer = TfidfVectorizer()
 X = vectorizer.fit_transform(df["name"])
 
-kmeans = KMeans(n_clusters=500, random_state=42)
+kmeans = KMeans(n_clusters=700, random_state=42)
 df["name_cluster"] = kmeans.fit_predict(X)
 
 
@@ -31,7 +31,6 @@ print(df.shape)
 
 df.to_csv("data/csv_outputs/cleaned_mileage_model_price_name_data.csv",
           float_format="%.15f", index=False)
-
 
 
 # name_cluster_dummies = pd.get_dummies(df["name_cluster"])
