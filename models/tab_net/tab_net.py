@@ -82,3 +82,5 @@ print("MAE:", round(float(mae), 6), round(float(mae), 6)*35000000000)
 for real, pred in zip(y_test[:10], preds[:10]):
     print("Actual:    {:.1f}\nPredicted: {:.1f}\n".format(
         float(real[0].item())*35000000000, abs(float(pred)*35000000000)))
+
+# print()
