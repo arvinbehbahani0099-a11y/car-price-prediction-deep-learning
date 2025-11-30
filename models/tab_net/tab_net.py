@@ -45,42 +45,62 @@ print(f"validation size: {X_val.shape[0]}")
 print(f"test size: {X_test.shape[0]}")
 
 
-tabnet_params = {
-    "n_d": 32,
-    "n_a": 32,
-    "n_steps": 8,
-    "gamma": 0.7,
-    "cat_idxs": cat_idxs,
-    "cat_dims": cat_dims,
-    "cat_emb_dim": [4, 46],
-    "optimizer_fn": __import__("torch").optim.Adam,
-    "optimizer_params": {"lr": 2e-2},
-}
-
-model = TabNetRegressor(**tabnet_params)
-
-model.fit(
-    X_train, y_train,
-    eval_set=[(X_val, y_val)],
-    max_epochs=100,
-    loss_fn=nn.SmoothL1Loss(),
-    batch_size=128,
-    virtual_batch_size=64,
-    patience=15,
-    drop_last=False
-)
-
-preds = model.predict(X_test)
-
-mse = mean_squared_error(y_test, preds)
-mae = mean_absolute_error(y_test, preds)
-
-print("MSE:", round(float(mse), 6))
-print("MAE:", round(float(mae), 6), round(float(mae), 6)*35000000000)
+car_cluster_dims = [y for y in range(4, 64)]
+mse_results = {}
+mae_results = {}
 
 
-for real, pred in zip(y_test[:10], preds[:10]):
-    print("Actual:    {:.1f}\nPredicted: {:.1f}\n".format(
-        float(real[0].item())*35000000000, abs(float(pred)*35000000000)))
+for car_cluster_dim in car_cluster_dims:
+    print(f"\ntrying {car_cluster_dim} clusters")
+
+    tabnet_params = {
+        "n_d": 32,
+        "n_a": 32,
+        "n_steps": 8,
+        "gamma": 0.7,
+        "cat_idxs": cat_idxs,
+        "cat_dims": cat_dims,
+        "cat_emb_dim": [4, car_cluster_dim],
+        "optimizer_fn": __import__("torch").optim.Adam,
+        "optimizer_params": {"lr": 2e-2},
+    }
+
+    model = TabNetRegressor(**tabnet_params)
+
+    model.fit(
+        X_train, y_train,
+        eval_set=[(X_val, y_val)],
+        max_epochs=100,
+        loss_fn=nn.SmoothL1Loss(),
+        batch_size=128,
+        virtual_batch_size=64,
+        patience=15,
+        drop_last=False
+    )
+
+    preds = model.predict(X_test)
+
+    mse = mean_squared_error(y_test, preds)
+    mae = mean_absolute_error(y_test, preds)
+    norm_mae = round(float(mae), 6)*35000000000
+
+    print("MSE:", round(float(mse), 6))
+    print("MAE:", round(float(mae), 6))
+
+    mse_results[mse] = car_cluster_dim
+    mae_results[norm_mae] = car_cluster_dim
+
+
+with open("models/tab_net/results.txt", "a", encoding="utf-8") as file:
+    file.write(f"k={df['name_cluster'].nunique()}")
+    file.write(
+        f"best mse at {min(mse_results.keys())} at car embed {mse_results[min(mse_results.keys())]}")
+    file.write(
+        f"best mae at {min(mae_results.keys())} at car embed {mae_results[min(mae_results.keys())]}\n")
+
+
+# for real, pred in zip(y_test[:10], preds[:10]):
+#     print("Actual:    {:.1f}\nPredicted: {:.1f}\n".format(
+#         float(real[0].item())*35000000000, abs(float(pred)*35000000000)))
 
 # print()
