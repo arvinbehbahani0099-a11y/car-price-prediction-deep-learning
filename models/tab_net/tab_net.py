@@ -84,23 +84,12 @@ for car_cluster_dim in car_cluster_dims:
     mae = mean_absolute_error(y_test, preds)
     norm_mae = round(float(mae), 6)*35000000000
 
-    print("MSE:", round(float(mse), 6))
-    print("MAE:", round(float(mae), 6))
-
-    mse_results[mse] = car_cluster_dim
-    mae_results[norm_mae] = car_cluster_dim
+print("MSE:", round(float(mse), 6))
+print("MAE:", round(float(mae), 6), round(float(mae), 6)*35000000000)
 
 
-with open("models/tab_net/results.txt", "a", encoding="utf-8") as file:
-    file.write(f"k={df['name_cluster'].nunique()}")
-    file.write(
-        f"best mse at {min(mse_results.keys())} at car embed {mse_results[min(mse_results.keys())]}")
-    file.write(
-        f"best mae at {min(mae_results.keys())} at car embed {mae_results[min(mae_results.keys())]}\n")
-
-
-# for real, pred in zip(y_test[:10], preds[:10]):
-#     print("Actual:    {:.1f}\nPredicted: {:.1f}\n".format(
-#         float(real[0].item())*35000000000, abs(float(pred)*35000000000)))
+for real, pred in zip(y_test[:10], preds[:10]):
+    print("Actual:    {:.1f}\nPredicted: {:.1f}\n".format(
+        float(real[0].item())*35000000000, abs(float(pred)*35000000000)))
 
 # print()
